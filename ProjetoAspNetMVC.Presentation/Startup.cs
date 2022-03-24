@@ -46,7 +46,11 @@ namespace ProjetoAspNetMVC.Presentation
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                //definir o caminho da página inicial do projeto
+                endpoints.MapControllerRoute(
+                    name: "default", //página inicial
+                    pattern: "{controller=Home}/{action=Index}" // caminho
+               );
             });
         }
     }
