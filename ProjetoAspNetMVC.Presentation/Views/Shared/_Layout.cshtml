@@ -10,6 +10,8 @@
     <meta name="viewport" content="width=device-width" />
     <title>Desafio UpBrasil</title>
     <link href="~/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/jquery.dataTables.min.css" rel="stylesheet" />
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -34,26 +36,56 @@
                             labelledby="navbarDropdown">
                             <li>
                                 <a class="dropdown-item"
-                                   href="/Tarefas/Cadastro">Cadastrar tarefas</a>
+                                   href="/Tarefa/Cadastro">Cadastrar tarefas</a>
                             </li>
                             <li>
                                 <a class="dropdown-item"
-                                   href="/Tarefas/Consulta">Consultar tarefas</a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item"
-                                   href="/Tarefas/Relatorio">Relatório de tarefas</a>
+                                   href="/Tarefa/Consulta">Consultar tarefas</a>
                             </li>
                         </ul>
                     </li>
                 </ul>
             </div>
+            <form class="d-flex">
+                <div class="text-white">
+                    @User.Identity.Name &nbsp;&nbsp;&nbsp;
+                    <a href="/Account/Logout" class="btn btn-outline-danger btn-sm"
+                       onclick="return confirm('Deseja realmente sair do sistema?')">
+                        Sair do Sistema
+                    </a>
+                </div>
+            </form>
         </div>
     </nav>
+
+    @if (TempData["Mensagem"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>@TempData["Mensagem"]</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="mt-4 container">
-    @RenderBody()
+        @RenderBody()
     </div>
     <script src="~/js/bootstrap.js"></script>
+    <script src="~/js/jquery-3.6.0.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+
+    <script>
+
+        //código javascript utilizando jquery
+        $(document).ready(function () {
+            $('#tabela').DataTable(
+                {
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese-Brasil.json'
+                    }
+                });
+           });
+
+    </script>
+
 </body>
 </html>

@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,12 +29,19 @@ namespace ProjetoAspNetMVC.Presentation
             //definir o padrão de navegação do projeto (CONTROLLER/VIEW)
             services.AddControllersWithViews();
 
+            //Habilitando o uso de cookies e tambem autenticação
+            services.Configure<CookiePolicyOptions>(options => { options.MinimumSameSitePolicy = SameSiteMode.None; });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
             //capturar a connectionstring do banco de dados
             var connectionstring = Configuration.GetConnectionString("Conexao");
 
             //Injeção de dependencia para as classes e interfaces da camada de repositorio do sistema
             services.AddTransient<IUsuarioRepository, UsuarioRepository>
                 (map => new UsuarioRepository(connectionstring));
+            services.AddTransient<ITarefaRepository, TarefaRepository>
+                (map => new TarefaRepository(connectionstring));
+
 
         }
 
@@ -51,6 +60,12 @@ namespace ProjetoAspNetMVC.Presentation
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCookiePolicy();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseAuthorization();
 

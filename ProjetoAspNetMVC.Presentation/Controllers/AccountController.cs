@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoAspNetMVC.Presentation.Models;
 using ProjetoAspNetMVC.Repository.Entities;
 using ProjetoAspNetMVC.Repository.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace ProjetoAspNetMVC.Presentation.Controllers
 {
@@ -45,10 +45,19 @@ namespace ProjetoAspNetMVC.Presentation.Controllers
                     //verificar se o usuario foi encontrado
                     if (usuario != null)
                     {
-                        //IREMOS AUTENTICAR O USUARIO!!
+                        //criando a autenticação do usuario
+                        var autenticacao = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, usuario.Email) }, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                        //gravar em cookie a autenticação
+                        var claim = new ClaimsPrincipal(autenticacao);
+                        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claim);
+
+                        //redirecionar para a página /Home/Index
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
+
                         TempData["Mensagem"] = "Acesso negado.";
                     }
                 }
@@ -98,8 +107,19 @@ namespace ProjetoAspNetMVC.Presentation.Controllers
                     //gerar uma mensagem de erro..
                     TempData["Mensagem"] = "Erro: " + e.Message;
                 }
+
             }
-          return View();
+            return View();
         }
+
+        public IActionResult Logout()
+        {
+            //destruir o cookie de autenticação do usuario
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            //redirecionar para a página de login
+            return RedirectToAction("Login", "Account");
+        }
+
     }
 }

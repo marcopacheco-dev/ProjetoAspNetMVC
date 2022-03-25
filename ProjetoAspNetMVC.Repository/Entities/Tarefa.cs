@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProjetoAspNetMVC.Repository.Entities
 {
-    class Tarefa
+    public class Tarefa
     {
         public Guid IdTarefa { get; set; }
         public string Nome { get; set; }
@@ -14,5 +10,10 @@ namespace ProjetoAspNetMVC.Repository.Entities
         public TimeSpan Hora { get; set; }
         public string Descricao { get; set; }
         public string Prioridade { get; set; }
+        public Guid IdUsuario { get; set; }
+
+        //Relacionamento de Associação (TER-1)
+        public Usuario Usuario { get; set; }
+
     }
 }
